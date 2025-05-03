@@ -1,0 +1,103 @@
+{% extends "predictor/base.html" %}
+{% load predictor_extras %}
+
+{% block title %}{{ model_name }} Predictions{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <!-- Prediction Form -->
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Make Predictions</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="id_tickers" class="form-label">Stock Symbols</label>
+                            {{ form.tickers }}
+                            <div class="form-text">Enter comma-separated stock symbols (e.g., AAPL, MSFT, GOOGL)</div>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Predict</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Recent Predictions -->
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Recent Predictions</h5>
+                </div>
+                <div class="card-body">
+                    {% if predictions %}
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Symbol</th>
+                                        <th>Signal</th>
+                                        <th>Confidence</th>
+                                        <th>Probability Up</th>
+                                        <th>Probability Down</th>
+                                        <th>Timestamp</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for prediction in predictions %}
+                                    <tr>
+                                        <td>{{ prediction.stock_symbol }}</td>
+                                        <td>
+                                            <span class="badge {% if prediction.signal == 'Buy' %}bg-success{% elif prediction.signal == 'Sell' %}bg-danger{% else %}bg-warning{% endif %}">
+                                                {{ prediction.signal }}
+                                            </span>
+                                        </td>
+                                        <td>{{ prediction.confidence|floatformat:2 }}%</td>
+                                        <td>{{ prediction.probability_up|floatformat:2 }}%</td>
+                                        <td>{{ prediction.probability_down|floatformat:2 }}%</td>
+                                        <td>{{ prediction.timestamp|date:"Y-m-d H:i" }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <p class="text-muted">No recent predictions</p>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Model Accuracy -->
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Model Accuracy</h5>
+                </div>
+                <div class="card-body">
+                    {% if accuracy %}
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6>Last 30 Days</h6>
+                                <div class="progress mb-3">
+                                    <div class="progress-bar {% if accuracy.accuracy >= 0.7 %}bg-success{% elif accuracy.accuracy >= 0.5 %}bg-warning{% else %}bg-danger{% endif %}" 
+                                         role="progressbar" 
+                                         style="width: {{ accuracy.accuracy|multiply:100 }}%">
+                                        {{ accuracy.accuracy|floatformat:2 }}%
+                                    </div>
+                                </div>
+                                <p class="text-muted">
+                                    {{ accuracy.correct_predictions }} of {{ accuracy.total_predictions }} predictions correct
+                                </p>
+                            </div>
+                        </div>
+                    {% else %}
+                        <p class="text-muted">No accuracy data available</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

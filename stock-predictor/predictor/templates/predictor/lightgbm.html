@@ -1,0 +1,93 @@
+{% extends "predictor/model_base.html" %}
+
+{% block title %}LightGBM Predictions{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h4>LightGBM Predictor</h4>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        {{ form.tickers.label_tag }}
+                        {{ form.tickers }}
+                        <small class="form-text text-muted">{{ form.tickers.help_text }}</small>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                        Generate Results
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header bg-info text-white">
+                <h5>Recent LightGBM Predictions</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>Stock</th>
+                                <th>Signal</th>
+                                <th>Confidence</th>
+                                <th>Probability Up</th>
+                                <th>Probability Down</th>
+                                <th>Last Updated</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if predictions %}
+                                {% for prediction in predictions %}
+                                <tr>
+                                    <td>{{ prediction.stock_symbol }}</td>
+                                    <td>
+                                        {% if prediction.signal == 'Buy' or prediction.signal == 'UP' %}
+                                            <span class="badge bg-success">Buy</span>
+                                        {% elif prediction.signal == 'Sell' or prediction.signal == 'DOWN' %}
+                                            <span class="badge bg-danger">Sell</span>
+                                        {% else %}
+                                            <span class="badge bg-warning">{{ prediction.signal }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ prediction.confidence|floatformat:2 }}%</td>
+                                    <td>{{ prediction.probability_up|floatformat:2 }}%</td>
+                                    <td>{{ prediction.probability_down|floatformat:2 }}%</td>
+                                    <td>{{ prediction.timestamp|date:"Y-m-d H:i" }}</td>
+                                </tr>
+                                {% endfor %}
+                            {% else %}
+                                <tr>
+                                    <td colspan="6" class="text-center">
+                                        No LightGBM predictions yet. Generate some results!
+                                        {% if not request.GET.generated %}
+                                            <br><small class="text-muted">(Did you run migrations?)</small>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.querySelector('form').addEventListener('submit', function() {
+    const button = this.querySelector('button[type="submit"]');
+    const spinner = button.querySelector('.spinner-border');
+    button.disabled = true;
+    spinner.classList.remove('d-none');
+});
+</script>
+{% endblock %}

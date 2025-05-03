@@ -1,0 +1,54 @@
+INFO 2025-05-03 02:03:34,971 model_registry 7112 13832 Registered model type: random_forest
+INFO 2025-05-03 02:03:34,971 model_registry 7112 13832 Registered model type: lightgbm
+INFO 2025-05-03 02:03:51,918 model_registry 16532 12624 Registered model type: random_forest
+INFO 2025-05-03 02:03:51,918 model_registry 16532 12624 Registered model type: lightgbm
+INFO 2025-05-03 02:04:06,092 autoreload 6092 10568 Watching for file changes with StatReloader
+INFO 2025-05-03 02:04:06,092 autoreload 6092 10568 Watching for file changes with StatReloader
+INFO 2025-05-03 02:04:08,197 model_registry 6092 10568 Registered model type: random_forest
+INFO 2025-05-03 02:04:08,197 model_registry 6092 10568 Registered model type: lightgbm
+INFO 2025-05-03 02:04:37,150 basehttp 6092 12628 "GET /lightgbm/ HTTP/1.1" 200 4720
+INFO 2025-05-03 02:04:37,150 basehttp 6092 12628 "GET /lightgbm/ HTTP/1.1" 200 4720
+INFO 2025-05-03 02:04:42,838 views 6092 12628 Processing prediction request for tickers: ['TATASTEEL.NS'] using lightgbm model
+INFO 2025-05-03 02:04:42,839 downloader 6092 12628 StockDataDownloader initialized with period=6mo, interval=1d
+INFO 2025-05-03 02:04:42,839 technical_indicators 6092 12628 TechnicalIndicatorCalculator initialized
+INFO 2025-05-03 02:04:42,840 processor 6092 12628 DataProcessor initialized with forward_days=3
+INFO 2025-05-03 02:04:42,840 prediction_service 6092 12628 PredictionService initialized with model_type=lightgbm
+INFO 2025-05-03 02:04:42,841 prediction_service 6092 12628 Downloading data for TATASTEEL.NS
+INFO 2025-05-03 02:04:42,841 downloader 6092 12628 Downloading stock data for TATASTEEL.NS
+INFO 2025-05-03 02:04:44,458 downloader 6092 12628 Successfully downloaded 121 records for TATASTEEL.NS
+INFO 2025-05-03 02:04:44,459 prediction_service 6092 12628 Calculating indicators for TATASTEEL.NS
+INFO 2025-05-03 02:04:44,459 technical_indicators 6092 12628 Calculating indicators: ['RSI', 'MACD', 'MACD_signal', 'BB_width', 'BB_pct', 'SMA_20', 'EMA_12', 'Volume_SMA', 'Volume_Ratio', 'ATR']
+INFO 2025-05-03 02:04:44,486 technical_indicators 6092 12628 Successfully calculated indicators on 88 records
+INFO 2025-05-03 02:04:44,487 prediction_service 6092 12628 Generating target for TATASTEEL.NS
+INFO 2025-05-03 02:04:44,488 processor 6092 12628 Generating target for 3-day future return
+INFO 2025-05-03 02:04:44,495 processor 6092 12628 Target generated: 45/85 up (52.9%), 40/85 down (47.1%)
+INFO 2025-05-03 02:04:44,496 prediction_service 6092 12628 Creating lightgbm model for TATASTEEL.NS
+INFO 2025-05-03 02:04:44,496 model_factory 6092 12628 Creating model of type: lightgbm
+INFO 2025-05-03 02:04:44,497 lightgbm_model 6092 12628 LightGBMModel initialized with test_size=0.2
+INFO 2025-05-03 02:04:44,497 prediction_service 6092 12628 Attempting to load model from models\TATASTEEL_NS_model.joblib
+ERROR 2025-05-03 02:04:44,498 lightgbm_model 6092 12628 No saved model found at models\TATASTEEL_NS_model.joblib
+NoneType: None
+INFO 2025-05-03 02:04:44,499 prediction_service 6092 12628 No existing lightgbm model found for TATASTEEL.NS, training new model
+INFO 2025-05-03 02:04:44,499 prediction_service 6092 12628 Training lightgbm model for TATASTEEL.NS
+INFO 2025-05-03 02:04:44,502 lightgbm_model 6092 12628 Starting LightGBM model training
+INFO 2025-05-03 02:04:44,514 lightgbm_model 6092 12628 Fitting model on 68 training samples
+ERROR 2025-05-03 02:04:44,515 lightgbm_model 6092 12628 Error training LightGBM model: LGBMClassifier.fit() got an unexpected keyword argument 'early_stopping_rounds'
+Traceback (most recent call last):
+  File "D:\Workspaces\PythonWorkspaces\stock-predictor\predictor\core\models\lightgbm_model.py", line 101, in train
+    self.model.fit(
+    ~~~~~~~~~~~~~~^
+        X_train,
+        ^^^^^^^^
+    ...<4 lines>...
+        verbose=False
+        ^^^^^^^^^^^^^
+    )
+    ^
+TypeError: LGBMClassifier.fit() got an unexpected keyword argument 'early_stopping_rounds'
+ERROR 2025-05-03 02:04:44,520 views 6092 12628 Error predicting TATASTEEL.NS: Failed to train model
+INFO 2025-05-03 02:04:44,522 basehttp 6092 12628 "POST /lightgbm/ HTTP/1.1" 302 0
+INFO 2025-05-03 02:04:44,522 basehttp 6092 12628 "POST /lightgbm/ HTTP/1.1" 302 0
+INFO 2025-05-03 02:04:44,540 basehttp 6092 12628 "GET /lightgbm/ HTTP/1.1" 200 5034
+INFO 2025-05-03 02:04:44,540 basehttp 6092 12628 "GET /lightgbm/ HTTP/1.1" 200 5034
+INFO 2025-05-03 02:08:06,474 autoreload 6092 10568 D:\Workspaces\PythonWorkspaces\stock-predictor\stock_predictor\settings.py changed, reloading.
+INFO 2025-05-03 02:08:06,474 autoreload 6092 10568 D:\Workspaces\PythonWorkspaces\stock-predictor\stock_predictor\settings.py changed, reloading.
